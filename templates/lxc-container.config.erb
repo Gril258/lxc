@@ -1,0 +1,47 @@
+# Template used to create this container: /usr/share/lxc/templates/lxc-debian
+# Parameters passed to the template: -r jessie
+# For additional config options, please look at lxc.container.conf(5)
+lxc.rootfs = <%= @lxcpath %>/<%= @name %>/rootfs
+
+# Common configuration
+lxc.include = /usr/share/lxc/config/<%= @common_config_name %>.common.conf
+
+# Container specific configuration
+lxc.mount = <%= @lxcpath %>/<%= @name %>/fstab
+lxc.utsname = <%= @name %>
+lxc.arch = amd64
+lxc.autodev = 1
+lxc.start.auto = <%= @autostart %>
+lxc.kmsg = 0
+
+<% if @allow_tun == 'yes' %>
+lxc.cgroup.devices.deny = a
+lxc.cgroup.devices.allow = c 10:200 rwm
+lxc.hook.autodev = sh -c "modprobe tun; cd ${LXC_ROOTFS_MOUNT}/dev; mkdir net; mknod net/tun c 10 200; chmod 0666 net/tun"
+<% end %>
+
+
+<% if @private_network == 'yes' %>
+lxc.network.type = <%= @private_type %>
+<% if @private_type == 'macvlan' %>
+lxc.network.macvlan.mode = bridge
+<% end %>
+lxc.network.flags = up
+lxc.network.link = <%= @private_link %>
+lxc.network.name = eth1
+lxc.network.ipv4 = <%= @private_ip %>
+  <% if @public_network != 'yes' %>
+lxc.network.ipv4.gateway = <%= @private_gw %>
+  <% end %>
+<% end %>
+<% if @public_network == 'yes' %>
+lxc.network.type = <%= @public_type %>
+<% if @public_type == 'macvlan' %>
+lxc.network.macvlan.mode = bridge
+<% end %>
+lxc.network.flags = up
+lxc.network.link = <%= @public_link %>
+lxc.network.name = eth0
+lxc.network.ipv4 = <%= @public_ip %>
+lxc.network.ipv4.gateway = <%= @public_gw %>
+<% end %>

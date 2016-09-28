@@ -1,0 +1,3 @@
+<% if @name != '' -%>
+/sbin/ip route del <%= @private_ipaddr[0] %>/32 dev <%= @private_link %>;/sbin/ip route add <%= @private_ipaddr[0] %>/32 dev <%= @private_link %>
+<% end -%>

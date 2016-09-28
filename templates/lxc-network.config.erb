@@ -1,0 +1,60 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+# This file is managed by Puppet see lxc class
+source /etc/network/interfaces.d/*
+
+auto lo
+iface lo inet loopback
+
+<% if @private_vlan == 'yes' %>
+auto <%= @private_interface %>.<%= @private_vlanid %>
+iface <%= @private_interface %>.<%= @private_vlanid %> inet manual
+    vlan-raw-device <%= @private_interface %>
+<% end %>
+
+auto <%= @private_bridge %>
+iface <%= @private_bridge %> inet static
+  address <%= @private_ip %>
+  netmask <%= @private_nm %>
+<% if @private_vlan == 'yes' -%>
+  bridge_ports <%= @private_interface %>.<%= @private_vlanid %>
+<% else -%>
+  bridge_ports <%= @private_interface %>
+<% end -%>
+  bridge_fd 0
+  bridge_stp on
+  post-up /sbin/ip link add link <%= @private_bridge %> name <%= @private_macvlan %> type macvlan mode bridge
+  post-up /sbin/ifconfig <%= @private_macvlan %> up
+  post-up /etc/network/if-up.d/local-containers
+
+<% if @public_vlan == 'yes' %>
+auto <%= @public_interface %>.<%= @public_vlanid %>
+iface <%= @public_interface %>.<%= @public_vlanid %> manual
+  vlan-raw-device <%= @public_interface %>
+<% end %>
+
+auto <%= @public_bridge %>
+iface <%= @public_bridge %> inet static
+  address <%= @public_ip %>
+  netmask <%= @public_nm %>
+  gateway <%= @public_gw %>
+  post-up iptables -t nat -A POSTROUTING -s <%= @private_ip %>/<%= @private_nm_cidr %> ! -d <%= @private_ip %>/<%= @private_nm_cidr %> -o <%= @public_bridge %> -j MASQUERADE
+<% if @public_vlan == 'yes' -%>
+  bridge_ports <%= @public_interface %>.<%= @public_vlanid %>
+<% else -%>
+  bridge_ports <%= @public_interface %>
+<% end -%>
+  bridge_fd 0
+  bridge_stp on
+  post-up /sbin/ip link add link <%= @public_bridge %> name <%= @public_macvlan %> type macvlan mode bridge
+  post-up /sbin/ifconfig <%= @public_macvlan %> up
+
+<% @public_alias.each do |ipalias| -%>
+<% if ipalias.has_key?('ip') and ipalias.has_key?('id') and ipalias.has_key?('netmask')-%>
+auto <%= @public_bridge %>:<%= ipalias['id'] %>
+iface <%= @public_bridge %>:<%= ipalias['id'] %> inet static
+  address <%= ipalias['ip'] %>
+  netmask <%= ipalias['netmask'] %>
+<% end -%>
+<% end -%>
+
