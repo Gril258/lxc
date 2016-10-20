@@ -25,7 +25,7 @@ define lxc::container (
 
 # Container inicialization
   exec { "lxc-create-${name}":
-    command => "lxc-create -n ${name} -t ${template} --lxcpath ${lxcpath} --logfile ${logfile} -- -r ${release}; echo \"nameserver ${private_gw}\" > ${lxcpath}/${name}/rootfs/etc/resolv.conf; echo \"127.0.0.1      localhost\" > ${lxcpath}/${name}/rootfs/etc/hosts; echo \"${private_ipaddr[0]}      ${name}\" >> ${lxcpath}/${name}/rootfs/etc/hosts; chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes wget vim git iputils-ping ca-certificates python; chroot ${lxcpath}/${name}/rootfs wget https://apt.puppetlabs.com/puppetlabs-release-${release}.deb -O /tmp/puppetlabs-release-${release}.deb; chroot ${lxcpath}/${name}/rootfs dpkg -i /tmp/puppetlabs-release-${release}.deb; chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes puppet-common;mkdir -p ${lxcpath}/${name}/rootfs/root/.ssh; cp /root/.ssh/authorized_keys ${lxcpath}/${name}/rootfs/root/.ssh/authorized_keys",
+    command => "lxc-create -n ${name} -t ${template} --lxcpath ${lxcpath} --logfile ${logfile} -- -r ${release}; cp /etc/resolv.conf ${lxcpath}/${name}/rootfs/etc/resolv.conf; echo \"127.0.0.1      localhost\" > ${lxcpath}/${name}/rootfs/etc/hosts; echo \"${private_ipaddr[0]}      ${name}\" >> ${lxcpath}/${name}/rootfs/etc/hosts; chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes wget vim git iputils-ping ca-certificates python; chroot ${lxcpath}/${name}/rootfs wget https://apt.puppetlabs.com/puppetlabs-release-${release}.deb -O /tmp/puppetlabs-release-${release}.deb; chroot ${lxcpath}/${name}/rootfs dpkg -i /tmp/puppetlabs-release-${release}.deb; chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes puppet-common;mkdir -p ${lxcpath}/${name}/rootfs/root/.ssh; cp /root/.ssh/authorized_keys ${lxcpath}/${name}/rootfs/root/.ssh/authorized_keys",
     path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/usr/local/sbin:/sbin',
     creates => "${lxcpath}/${name}/rootfs",
     timeout => '900',
@@ -89,8 +89,8 @@ define lxc::container (
       hasstatus  => true,
       require    => Exec["lxc-create-${name}"],
     }
-    concat::fragment { "conatiner-route-persistent-${name}":
-      order   => "01_${name}",
+    concat::fragment { "conatiner-route-persistent-public-${name}":
+      order   => "02_${name}",
       target  => '/etc/network/if-up.d/local-containers',
       content => template('lxc/local-containers.erb'),
     }

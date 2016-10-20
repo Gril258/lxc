@@ -41,6 +41,9 @@ class lxc(
       owner => 'root',
       mode  => '0755',
     }
+    package { 'irqbalance':
+      ensure => 'latest'
+    }
   }
   else {
     # dummy reload-network resorce if only install
