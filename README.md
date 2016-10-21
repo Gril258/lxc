@@ -3,13 +3,6 @@ lxc
 
 This module install lxc on debian and create containers or to only create new debian root
 
-## Dependency
-
-This module has dependency on yelp/netstdlib
-add this line to Puppetfile for librarian-puppet
-```
-mod "yelp/netstdlib", "0.0.1"
-```
 ## Usage
 
 # main class full example
@@ -28,7 +21,7 @@ mod "yelp/netstdlib", "0.0.1"
         private_ip        => '10.50.0.12',
         private_nm        => '255.255.255.192',
         private_vlanid    => '15',
-        private_vlan      => no',
+        private_vlan      => 'no',
         private_interface => 'eth1',
         public_alias      => [
           {
