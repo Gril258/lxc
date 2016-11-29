@@ -21,6 +21,7 @@ define lxc::container (
   ) {
 
   $private_ipaddr = split($private_ip,'/')
+  $public_ipaddr = split($public_ip,'/')
   $common_config_name = $template
 
 # Container inicialization
@@ -92,10 +93,29 @@ define lxc::container (
     concat::fragment { "conatiner-route-persistent-public-${name}":
       order   => "02_${name}",
       target  => '/etc/network/if-up.d/local-containers',
-      content => template('lxc/local-containers.erb'),
+      content => template('lxc/local-containers-private.erb'),
     }
     Internal_network::Route <| |> {
       device => "dev ${private_link}",
+    }
+  }
+
+  if $public_network == 'yes' {
+    service { "container-${name}-public-route":
+      ensure     => $ensure,
+      provider   => 'base',
+      enable     => true,
+      start      => "ip route add ${public_ipaddr[0]}/32 dev ${private_link}",
+      status     => "ip route list |grep -o -E \"${public_ipaddr[0]} dev ${public_link}  scope link\"",
+      stop       => "ip route del ${public_ipaddr[0]}/32 dev ${private_link}",
+      hasrestart => false,
+      hasstatus  => true,
+      require    => Exec["lxc-create-${name}"],
+    }
+    concat::fragment { "conatiner-route-persistent-public-${name}":
+      order   => "02_${name}",
+      target  => '/etc/network/if-up.d/local-containers',
+      content => template('lxc/local-containers-public.erb'),
     }
   }
 
