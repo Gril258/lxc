@@ -16,5 +16,5 @@
    ],
   "dependencies": [
     { "name": "yelp/netstdlib", "version_requirement": ">= 0.0.1" }
-  ],
+  ]
 }
