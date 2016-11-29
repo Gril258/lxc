@@ -90,7 +90,7 @@ define lxc::container (
       hasstatus  => true,
       require    => Exec["lxc-create-${name}"],
     }
-    concat::fragment { "conatiner-route-persistent-public-${name}":
+    concat::fragment { "conatiner-route-persistent-private-${name}":
       order   => "02_${name}",
       target  => '/etc/network/if-up.d/local-containers',
       content => template('lxc/local-containers-private.erb'),
