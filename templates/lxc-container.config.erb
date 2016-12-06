@@ -15,7 +15,7 @@ lxc.start.auto = <%= @autostart %>
 lxc.kmsg = 0
 
 <% if @allow_tun == 'yes' %>
-lxc.cgroup.devices.deny = a
+#lxc.cgroup.devices.deny = a # disable i cause fail on updates
 lxc.cgroup.devices.allow = c 10:200 rwm
 lxc.hook.autodev = sh -c "modprobe tun; cd ${LXC_ROOTFS_MOUNT}/dev; mkdir net; mknod net/tun c 10 200; chmod 0666 net/tun"
 <% end %>
