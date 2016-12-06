@@ -16,7 +16,8 @@ class lxc(
   $private_interface = undef,
   $private_vlanid = 0,
   $private_vlan = 'no',
-  $install_only = false
+  $install_only = false,
+  $lxc_version = 'latest'
   ) {
 
   if $install_only == false {
@@ -58,7 +59,7 @@ class lxc(
 
 # instalation support debian 8
   package { 'lxc':
-    ensure  => 'latest',
+    ensure  => $lxc_version,
     tag     => 'special',
     require => Exec['apt-update-common-special']
   }
