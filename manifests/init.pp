@@ -1,5 +1,6 @@
 # lxc small class
 class lxc(
+  $public_stp = 'off',
   $public_bridge = undef,
   $public_macvlan = undef,
   $public_interface = undef,
@@ -9,6 +10,7 @@ class lxc(
   $public_alias = [],
   $public_vlan = 'no',
   $public_vlanid = 0,
+  $private_stp = 'off',
   $private_bridge = undef,
   $private_macvlan = undef,
   $private_ip = undef,

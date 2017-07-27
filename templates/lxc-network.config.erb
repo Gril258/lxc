@@ -22,7 +22,7 @@ iface <%= @private_bridge %> inet static
   bridge_ports <%= @private_interface %>
 <% end -%>
   bridge_fd 0
-  bridge_stp on
+  bridge_stp <%= @private_stp %>
   post-up /sbin/ip link add link <%= @private_bridge %> name <%= @private_macvlan %> type macvlan mode bridge
   post-up /sbin/ifconfig <%= @private_macvlan %> up
   post-up /etc/network/if-up.d/local-containers
@@ -45,7 +45,7 @@ iface <%= @public_bridge %> inet static
   bridge_ports <%= @public_interface %>
 <% end -%>
   bridge_fd 0
-  bridge_stp on
+  bridge_stp <%= @public_stp %>
   post-up /sbin/ip link add link <%= @public_bridge %> name <%= @public_macvlan %> type macvlan mode bridge
   post-up /sbin/ifconfig <%= @public_macvlan %> up
 
