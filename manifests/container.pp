@@ -2,10 +2,10 @@
 define lxc::container (
     $ensure = stopped,
     $public_gw = undef,
-    $public_ip = undef,
+    $public_ip = '172.16.100.11',
     $public_type = 'macvlan',
     $public_link = 'mvlan0',
-    $private_ip = undef,
+    $private_ip = '172.16.100.11',
     $private_gw = undef,
     $private_type = 'macvlan',
     $private_link = 'mvlan1',
@@ -20,6 +20,8 @@ define lxc::container (
     $config_version = 'simple',
   ) {
 
+  $private_ipaddr = split($private_ip,'/')
+  $public_ipaddr = split($public_ip,'/')
   $common_config_name = $template
 
 # Container inicialization
@@ -77,7 +79,6 @@ define lxc::container (
   }
 
   if $private_network == 'yes' {
-    $private_ipaddr = split($private_ip,'/')
     service { "container-${name}-route":
       ensure     => $ensure,
       provider   => 'base',
@@ -100,7 +101,6 @@ define lxc::container (
   }
 
   if $public_network == 'yes' {
-    $public_ipaddr = split($public_ip,'/')
     service { "container-${name}-public-route":
       ensure     => $ensure,
       provider   => 'base',
