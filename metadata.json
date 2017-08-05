@@ -1,6 +1,6 @@
 {
   "name": "Cleerio-lxc",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Martin Krutina",
   "license": "Apache-2.0",
   "summary": "A module for a lxc",

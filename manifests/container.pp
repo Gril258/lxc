@@ -20,8 +20,6 @@ define lxc::container (
     $config_version = 'simple',
   ) {
 
-  $private_ipaddr = split($private_ip,'/')
-  $public_ipaddr = split($public_ip,'/')
   $common_config_name = $template
 
 # Container inicialization
@@ -79,6 +77,7 @@ define lxc::container (
   }
 
   if $private_network == 'yes' {
+    $private_ipaddr = split($private_ip,'/')
     service { "container-${name}-route":
       ensure     => $ensure,
       provider   => 'base',
@@ -101,6 +100,7 @@ define lxc::container (
   }
 
   if $public_network == 'yes' {
+    $public_ipaddr = split($public_ip,'/')
     service { "container-${name}-public-route":
       ensure     => $ensure,
       provider   => 'base',
