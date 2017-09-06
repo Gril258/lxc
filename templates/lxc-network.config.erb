@@ -6,6 +6,17 @@ source /etc/network/interfaces.d/*
 auto lo
 iface lo inet loopback
 
+<% if @private_bond == 'yes' %>
+auto <%= @private_interface %>
+iface <%= @private_interface %> inet static
+    slaves <% @private_slaves.each do |privateslave| -%><%=privateslave -%> <% end -%>
+    bond_mode active-backup
+    bond_miimon 100
+    bond_downdelay 200
+    bond_updelay 200
+<% end %>
+
+
 <% if @private_vlan == 'yes' %>
 auto <%= @private_interface %>.<%= @private_vlanid %>
 iface <%= @private_interface %>.<%= @private_vlanid %> inet manual
@@ -26,6 +37,17 @@ iface <%= @private_bridge %> inet static
   post-up /sbin/ip link add link <%= @private_bridge %> name <%= @private_macvlan %> type macvlan mode bridge
   post-up /sbin/ifconfig <%= @private_macvlan %> up
   post-up /etc/network/if-up.d/local-containers
+
+<% if @public_bond == 'yes' %>
+auto <%= @public_interface %>
+iface <%= @public_interface %> inet static
+    slaves <% @public_slaves.each do |publicslave| -%><%=publicslave -%> <% end -%>
+    bond_mode active-backup
+    bond_miimon 100
+    bond_downdelay 200
+    bond_updelay 200
+<% end %>
+
 
 <% if @public_vlan == 'yes' %>
 auto <%= @public_interface %>.<%= @public_vlanid %>
