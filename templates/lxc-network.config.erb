@@ -8,7 +8,7 @@ iface lo inet loopback
 
 <% if @private_bond == 'yes' %>
 auto <%= @private_interface %>
-iface <%= @private_interface %> inet static
+iface <%= @private_interface %> inet manual
     slaves <% @private_slaves.each do |privateslave| -%><%=privateslave -%> <% end -%>
 
     bond_mode active-backup
@@ -41,7 +41,7 @@ iface <%= @private_bridge %> inet static
 
 <% if @public_bond == 'yes' %>
 auto <%= @public_interface %>
-iface <%= @public_interface %> inet static
+iface <%= @public_interface %> inet manual
     slaves <% @public_slaves.each do |publicslave| -%><%=publicslave -%> <% end -%>
 
     bond_mode active-backup
