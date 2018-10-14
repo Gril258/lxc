@@ -24,9 +24,21 @@ define lxc::container (
   $public_ipaddr = split($public_ip,'/')
   $common_config_name = $template
 
+  case $release {
+    'jessie': {
+    $packages = 'cron python'
+    }
+    'stretch': {
+    $packages = 'dirmngr cron python'
+    }
+    default: {
+    $packages = 'cron python'
+    }
+  }
+
 # Container inicialization
   exec { "lxc-create-${name}":
-    command => "lxc-create -n ${name} -t ${template} --lxcpath ${lxcpath} --logfile ${logfile} -- -r ${release}; cp /etc/resolv.conf ${lxcpath}/${name}/rootfs/etc/resolv.conf; echo \"127.0.0.1      localhost\" > ${lxcpath}/${name}/rootfs/etc/hosts; echo \"${private_ipaddr[0]}      ${name}\" >> ${lxcpath}/${name}/rootfs/etc/hosts; chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes wget vim git iputils-ping ca-certificates python; chroot ${lxcpath}/${name}/rootfs wget https://apt.puppetlabs.com/puppetlabs-release-${release}.deb -O /tmp/puppetlabs-release-${release}.deb; chroot ${lxcpath}/${name}/rootfs dpkg -i /tmp/puppetlabs-release-${release}.deb; chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes puppet-common;mkdir -p ${lxcpath}/${name}/rootfs/root/.ssh; cp /root/.ssh/authorized_keys ${lxcpath}/${name}/rootfs/root/.ssh/authorized_keys",
+    command => "lxc-create -n ${name} -t ${template} --lxcpath ${lxcpath} --logfile ${logfile} -- -r ${release}; cp /etc/resolv.conf ${lxcpath}/${name}/rootfs/etc/resolv.conf; echo \"127.0.0.1      localhost\" > ${lxcpath}/${name}/rootfs/etc/hosts; echo \"${private_ipaddr[0]}      ${name}\" >> ${lxcpath}/${name}/rootfs/etc/hosts; chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes wget vim git iputils-ping ca-certificates ${packages}; chroot ${lxcpath}/${name}/rootfs wget https://apt.puppetlabs.com/puppetlabs-release-${release}.deb -O /tmp/puppetlabs-release-${release}.deb; chroot ${lxcpath}/${name}/rootfs dpkg -i /tmp/puppetlabs-release-${release}.deb; chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes puppet-common;mkdir -p ${lxcpath}/${name}/rootfs/root/.ssh; cp /root/.ssh/authorized_keys ${lxcpath}/${name}/rootfs/root/.ssh/authorized_keys",
     path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/usr/local/sbin:/sbin',
     creates => "${lxcpath}/${name}/rootfs",
     timeout => '900',
