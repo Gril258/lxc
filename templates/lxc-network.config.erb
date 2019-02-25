@@ -28,6 +28,8 @@ auto <%= @private_bridge %>
 iface <%= @private_bridge %> inet static
   address <%= @private_ip %>
   netmask <%= @private_nm %>
+<% if @private_bridge_alias == 'yes' %>
+<% else -%>
 <% if @private_vlan == 'yes' -%>
   bridge_ports <%= @private_interface %>.<%= @private_vlanid %>
 <% else -%>
@@ -35,6 +37,7 @@ iface <%= @private_bridge %> inet static
 <% end -%>
   bridge_fd 0
   bridge_stp <%= @private_stp %>
+<% end -%>
   post-up /sbin/ip link add link <%= @private_bridge %> name <%= @private_macvlan %> type macvlan mode bridge
   post-up /sbin/ifconfig <%= @private_macvlan %> up
   post-up /etc/network/if-up.d/local-containers
@@ -63,6 +66,8 @@ iface <%= @public_bridge %> inet static
   netmask <%= @public_nm %>
   gateway <%= @public_gw %>
   post-up iptables -t nat -A POSTROUTING -s <%= @private_ip %>/<%= @private_nm_cidr %> ! -d <%= @private_ip %>/<%= @private_nm_cidr %> -o <%= @public_bridge %> -j MASQUERADE
+<% if @public_bridge_alias == 'yes' %>
+<% else -%>
 <% if @public_vlan == 'yes' -%>
   bridge_ports <%= @public_interface %>.<%= @public_vlanid %>
 <% else -%>
@@ -70,6 +75,7 @@ iface <%= @public_bridge %> inet static
 <% end -%>
   bridge_fd 0
   bridge_stp <%= @public_stp %>
+<% end -%>
   post-up /sbin/ip link add link <%= @public_bridge %> name <%= @public_macvlan %> type macvlan mode bridge
   post-up /sbin/ifconfig <%= @public_macvlan %> up
 

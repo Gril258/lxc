@@ -12,6 +12,7 @@ class lxc(
   $public_alias = [],
   $public_vlan = 'no',
   $public_vlanid = 0,
+  $public_bridge_alias = 'no',
   $private_stp = 'off',
   $private_bridge = undef,
   $private_macvlan = undef,
@@ -22,6 +23,7 @@ class lxc(
   $private_interface = undef,
   $private_vlanid = 0,
   $private_vlan = 'no',
+  $private_bridge_alias = 'no',
   $install_only = false,
   $lxc_version = 'latest'
   ) {
