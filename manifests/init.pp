@@ -25,26 +25,38 @@ class lxc(
   $private_vlan = 'no',
   $private_bridge_alias = 'no',
   $install_only = false,
+  $is_aws = false,
   $lxc_version = 'latest'
   ) {
 
   if $install_only == false {
 
     $private_nm_cidr = netmask_to_masklen($private_nm)
-    file { '/etc/network/interfaces':
-      ensure  => present,
-      mode    => '0644',
-      content => template('lxc/lxc-network.config.erb'),
-      notify  => Exec['reload-network']
+    if is_aws == true {
+      file { '/etc/network/interfaces.d/lxc-bridge.conf':
+        ensure  => present,
+        mode    => '0644',
+        content => template('lxc/lxc-network.config.erb'),
+        notify  => Exec['reload-network']
+      }
+    }
+    else {
+      file { '/etc/network/interfaces':
+        ensure  => present,
+        mode    => '0644',
+        content => template('lxc/lxc-network.config.erb'),
+        notify  => Exec['reload-network']
+      }
+      exec { 'reload-network':
+        command     => '/usr/sbin/service networking restart && /usr/bin/touch /etc/network/reload-network.lock',
+        creates     => '/etc/network/reload-network.lock',
+        user        => 'root',
+        refreshonly => true,
+        require     => [File['/etc/network/interfaces'], Package['bridge-utils', 'vlan', 'ifenslave']]
+      }
     }
 
-    exec { 'reload-network':
-      command     => '/usr/sbin/service networking restart && /usr/bin/touch /etc/network/reload-network.lock',
-      creates     => '/etc/network/reload-network.lock',
-      user        => 'root',
-      refreshonly => true,
-      require     => [File['/etc/network/interfaces'], Package['bridge-utils', 'vlan', 'ifenslave']]
-    }
+
 
     concat { '/etc/network/if-up.d/local-containers':
       owner => 'root',
