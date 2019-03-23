@@ -32,7 +32,7 @@ class lxc(
   if $install_only == false {
 
     $private_nm_cidr = netmask_to_masklen($private_nm)
-    if is_aws == true {
+    if $is_aws == true {
       file { '/etc/network/interfaces.d/lxc-bridge.conf':
         ensure  => present,
         mode    => '0644',
@@ -88,11 +88,26 @@ class lxc(
     tag     => 'special',
     require => Exec['apt-update-common-special']
   }
-  package { 'libvirt-bin':
-    ensure  => 'latest',
-    tag     => 'special',
-    require => Exec['apt-update-common-special']
+  case $::lsbdistcodename {
+    'stretch': {
+      package { 'libvirt-clients':
+        ensure  => 'latest',
+        tag     => 'special',
+        require => Exec['apt-update-common-special']
+      }
+    }
+    'jessie': {
+      package { 'libvirt-bin':
+        ensure  => 'latest',
+        tag     => 'special',
+        require => Exec['apt-update-common-special']
+      }
+    }
+    default: {
+      fail('lxc - unsupported release')
+    }
   }
+
   package { 'debootstrap':
     ensure  => 'latest',
     tag     => 'special',
