@@ -39,6 +39,12 @@ class lxc(
         content => template('lxc/lxc-network.config.erb'),
         notify  => Exec['reload-network']
       }
+      exec { 'reload-network':
+        command     => '/usr/bin/touch /etc/network/reload-network.lock',
+        creates     => '/etc/network/reload-network.lock',
+        user        => 'root',
+        refreshonly => true,
+      }
     }
     else {
       file { '/etc/network/interfaces':
