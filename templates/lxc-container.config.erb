@@ -30,7 +30,7 @@ lxc.network.flags = up
 lxc.network.link = <%= @private_link %>
 lxc.network.name = eth1
 lxc.network.ipv4 = <%= @private_ip %>
-  <% if @public_network != 'yes' %>
+  <% if @public_network != 'yes' or @public_gw == nil %>
 lxc.network.ipv4.gateway = <%= @private_gw %>
   <% end %>
 <% end %>
@@ -43,5 +43,7 @@ lxc.network.flags = up
 lxc.network.link = <%= @public_link %>
 lxc.network.name = eth0
 lxc.network.ipv4 = <%= @public_ip %>
+<% if @puglic_gw != nil %>
 lxc.network.ipv4.gateway = <%= @public_gw %>
+<% end %>
 <% end %>
