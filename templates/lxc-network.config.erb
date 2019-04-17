@@ -64,7 +64,7 @@ auto <%= @public_bridge %>
 iface <%= @public_bridge %> inet static
   address <%= @public_ip %>
   netmask <%= @public_nm %>
-<% if @puglic_gw != nil %>
+<% if @public_gw != nil %>
   gateway <%= @public_gw %>
 <% end %>
   post-up iptables -t nat -A POSTROUTING -s <%= @private_ip %>/<%= @private_nm_cidr %> ! -d <%= @private_ip %>/<%= @private_nm_cidr %> -o <%= @public_bridge %> -j MASQUERADE
