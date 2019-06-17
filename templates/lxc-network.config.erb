@@ -6,42 +6,6 @@ source /etc/network/interfaces.d/*
 auto lo
 iface lo inet loopback
 
-<% if @private_bond == 'yes' %>
-auto <%= @private_interface %>
-iface <%= @private_interface %> inet manual
-    slaves <% @private_slaves.each do |privateslave| -%><%=privateslave -%> <% end -%>
-
-    bond_mode active-backup
-    bond_miimon 100
-    bond_downdelay 200
-    bond_updelay 200
-<% end %>
-
-
-<% if @private_vlan == 'yes' %>
-auto <%= @private_interface %>.<%= @private_vlanid %>
-iface <%= @private_interface %>.<%= @private_vlanid %> inet manual
-    vlan-raw-device <%= @private_interface %>
-<% end %>
-
-auto <%= @private_bridge %>
-iface <%= @private_bridge %> inet static
-  address <%= @private_ip %>
-  netmask <%= @private_nm %>
-<% if @private_bridge_alias == 'yes' %>
-<% else -%>
-<% if @private_vlan == 'yes' -%>
-  bridge_ports <%= @private_interface %>.<%= @private_vlanid %>
-<% else -%>
-  bridge_ports <%= @private_interface %>
-<% end -%>
-  bridge_fd 0
-  bridge_stp <%= @private_stp %>
-<% end -%>
-  post-up /sbin/ip link add link <%= @private_bridge %> name <%= @private_macvlan %> type macvlan mode bridge
-  post-up /sbin/ifconfig <%= @private_macvlan %> up
-  post-up /etc/network/if-up.d/local-containers
-
 <% if @public_bond == 'yes' %>
 auto <%= @public_interface %>
 iface <%= @public_interface %> inet manual
@@ -90,3 +54,49 @@ iface <%= @public_bridge %>:<%= ipalias['id'] %> inet static
 <% end -%>
 <% end -%>
 
+
+
+<% if @private_bond == 'yes' %>
+auto <%= @private_interface %>
+iface <%= @private_interface %> inet manual
+    slaves <% @private_slaves.each do |privateslave| -%><%=privateslave -%> <% end -%>
+
+    bond_mode active-backup
+    bond_miimon 100
+    bond_downdelay 200
+    bond_updelay 200
+<% end %>
+
+
+<% if @private_vlan == 'yes' %>
+auto <%= @private_interface %>.<%= @private_vlanid %>
+iface <%= @private_interface %>.<%= @private_vlanid %> inet manual
+    vlan-raw-device <%= @private_interface %>
+<% end %>
+
+auto <%= @private_bridge %>
+iface <%= @private_bridge %> inet static
+  address <%= @private_ip %>
+  netmask <%= @private_nm %>
+<% if @private_bridge_alias == 'yes' %>
+<% else -%>
+<% if @private_vlan == 'yes' -%>
+  bridge_ports <%= @private_interface %>.<%= @private_vlanid %>
+<% else -%>
+  bridge_ports <%= @private_interface %>
+<% end -%>
+  bridge_fd 0
+  bridge_stp <%= @private_stp %>
+<% end -%>
+  post-up /sbin/ip link add link <%= @private_bridge %> name <%= @private_macvlan %> type macvlan mode bridge
+  post-up /sbin/ifconfig <%= @private_macvlan %> up
+  post-up /etc/network/if-up.d/local-containers
+
+<% @private_alias.each do |ipalias| -%>
+<% if ipalias.has_key?('ip') and ipalias.has_key?('id') and ipalias.has_key?('netmask')-%>
+auto <%= @private_bridge %>:<%= ipalias['id'] %>
+iface <%= @private_bridge %>:<%= ipalias['id'] %> inet static
+  address <%= ipalias['ip'] %>
+  netmask <%= ipalias['netmask'] %>
+<% end -%>
+<% end -%>

@@ -24,6 +24,7 @@ class lxc(
   $private_vlanid = 0,
   $private_vlan = 'no',
   $private_bridge_alias = 'no',
+  $private_alias = [],
   $install_only = false,
   $is_aws = false,
   $lxc_version = 'latest'
