@@ -130,7 +130,7 @@ define lxc::container (
       provider   => 'base',
       enable     => true,
       start      => "ip route add ${public_ipaddr[0]}/32 dev ${private_link}",
-      status     => "ip route list |grep -o -E \"${public_ipaddr[0]} dev ${public_link}  scope link\"",
+      status     => "ip route list |grep -o -E \"${public_ipaddr[0]} dev ${public_link} scope link\"",
       stop       => "ip route del ${public_ipaddr[0]}/32 dev ${private_link}",
       hasrestart => false,
       hasstatus  => true,
