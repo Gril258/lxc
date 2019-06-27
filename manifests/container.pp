@@ -53,7 +53,7 @@ define lxc::container (
 
 # Container inicialization
   exec { "lxc-create-${name}":
-    command => "lxc-create -n ${name} -t ${template} --lxcpath ${lxcpath} --logfile ${logfile} -- ${release_option} ${release}; cp /etc/resolv.conf ${lxcpath}/${name}/rootfs/etc/resolv.conf; echo \"127.0.0.1      localhost\" > ${lxcpath}/${name}/rootfs/etc/hosts; echo \"${private_ipaddr[0]}      ${name}\" >> ${lxcpath}/${name}/rootfs/etc/hosts;${install_command};mkdir -p ${lxcpath}/${name}/rootfs/root/.ssh; cp /root/.ssh/authorized_keys ${lxcpath}/${name}/rootfs/root/.ssh/authorized_keys",
+    command => "lxc-create -n ${name} -t ${template} --lxcpath ${lxcpath} --logfile ${logfile} -- ${release_option} ${release}; cp /etc/resolv.conf ${lxcpath}/${name}/rootfs/etc/resolv.conf; echo \"127.0.0.1      localhost\" > ${lxcpath}/${name}/rootfs/etc/hosts; echo \"${private_ipaddr[0]}      ${name}\" >> ${lxcpath}/${name}/rootfs/etc/hosts;${install_command} mkdir -p ${lxcpath}/${name}/rootfs/root/.ssh; cp /root/.ssh/authorized_keys ${lxcpath}/${name}/rootfs/root/.ssh/authorized_keys",
     path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin:/usr/local/sbin:/sbin',
     creates => "${lxcpath}/${name}/rootfs",
     timeout => '900',
