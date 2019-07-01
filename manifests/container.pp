@@ -28,7 +28,7 @@ define lxc::container (
   case $template {
     'centos': {
       $release_option = '-R'
-      $install_command = "chroot ${lxcpath}/${name}/rootfs yum install -y wget vim git iputils-ping ca-certificates epel-release ${packages};chroot ${lxcpath}/${name}/rootfs yum install -y puppet ${packages};"
+      $install_command = "chroot ${lxcpath}/${name}/rootfs yum install -y wget vim git iputils-ping ca-certificates epel-release ${packages};chroot ${lxcpath}/${name}/rootfs yum localinstall http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm chroot ${lxcpath}/${name}/rootfs yum install -y puppet;"
     }
     default: {
       $install_command = "chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes wget vim git iputils-ping ca-certificates puppet ${packages};"
