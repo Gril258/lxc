@@ -31,7 +31,7 @@ define lxc::container (
       $install_command = "chroot ${lxcpath}/${name}/rootfs yum install -y wget vim git iputils-ping ca-certificates ${packages};"
     }
     default: {
-      $install_command = "chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes wget vim git iputils-ping ca-certificates ${packages};"
+      $install_command = "chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes wget vim git iputils-ping ca-certificates puppet ${packages};"
       $release_option = '-r'
     }
   }
