@@ -29,7 +29,7 @@ lxc.net.0.macvlan.mode = bridge
 lxc.net.0.flags = up
 lxc.net.0.link = <%= @private_link %>
 lxc.net.0.name = eth1
-lxc.net.0.ipv4 = <%= @private_ip %>
+lxc.net.0.ipv4.address = <%= @private_ip %>
   <% if @public_network != 'yes' or @public_gw == nil %>
 lxc.net.0.ipv4.gateway = <%= @private_gw %>
   <% end %>
@@ -42,7 +42,7 @@ lxc.net.1.macvlan.mode = bridge
 lxc.net.1.flags = up
 lxc.net.1.link = <%= @public_link %>
 lxc.net.1.name = eth0
-lxc.net.1.ipv4 = <%= @public_ip %>
+lxc.net.1.ipv4.address = <%= @public_ip %>
 <% if @public_gw != nil %>
 lxc.net.1.ipv4.gateway = <%= @public_gw %>
 <% end %>
