@@ -1,0 +1,49 @@
+# Template used to create this container: /usr/share/lxc/templates/lxc-debian
+# Parameters passed to the template: -r jessie
+# For additional config options, please look at lxc.container.conf(5)
+lxc.rootfs = <%= @lxcpath %>/<%= @name %>/rootfs
+
+# Common configuration
+lxc.include = /usr/share/lxc/config/common.conf
+
+# Container specific configuration
+lxc.mount = <%= @lxcpath %>/<%= @name %>/fstab
+lxc.uts.name = <%= @name %>
+lxc.arch = amd64
+lxc.autodev = 1
+lxc.start.auto = <%= @autostart %>
+# lxc.kmsg = 0
+
+<% if @allow_tun == 'yes' %>
+#lxc.cgroup.devices.deny = a # disable i cause fail on updates
+lxc.cgroup.devices.allow = c 10:200 rwm
+lxc.hook.autodev = sh -c "modprobe tun; cd ${LXC_ROOTFS_MOUNT}/dev; mkdir net; mknod net/tun c 10 200; chmod 0666 net/tun"
+<% end %>
+
+
+<% if @private_network == 'yes' %>
+lxc.net.0.type = <%= @private_type %>
+<% if @private_type == 'macvlan' %>
+lxc.net.0.macvlan.mode = bridge
+<% end %>
+lxc.net.0.flags = up
+lxc.net.0.link = <%= @private_link %>
+lxc.net.0.name = eth1
+lxc.net.0.ipv4 = <%= @private_ip %>
+  <% if @public_network != 'yes' or @public_gw == nil %>
+lxc.net.0.ipv4.gateway = <%= @private_gw %>
+  <% end %>
+<% end %>
+<% if @public_network == 'yes' %>
+lxc.net.1.type = <%= @public_type %>
+<% if @public_type == 'macvlan' %>
+lxc.net.1.macvlan.mode = bridge
+<% end %>
+lxc.net.1.flags = up
+lxc.net.1.link = <%= @public_link %>
+lxc.net.1.name = eth0
+lxc.net.1.ipv4 = <%= @public_ip %>
+<% if @public_gw != nil %>
+lxc.net.1.ipv4.gateway = <%= @public_gw %>
+<% end %>
+<% end %>
