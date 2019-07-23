@@ -1,7 +1,7 @@
 # Template used to create this container: /usr/share/lxc/templates/lxc-debian
 # Parameters passed to the template: -r jessie
 # For additional config options, please look at lxc.container.conf(5)
-lxc.rootfs = <%= @lxcpath %>/<%= @name %>/rootfs
+lxc.rootfs.path = <%= @lxcpath %>/<%= @name %>/rootfs
 
 # Common configuration
 lxc.include = /usr/share/lxc/config/common.conf
