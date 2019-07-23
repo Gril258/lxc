@@ -7,7 +7,7 @@ lxc.rootfs.path = <%= @lxcpath %>/<%= @name %>/rootfs
 lxc.include = /usr/share/lxc/config/common.conf
 
 # Container specific configuration
-lxc.mount = <%= @lxcpath %>/<%= @name %>/fstab
+lxc.mount.fstab = <%= @lxcpath %>/<%= @name %>/fstab
 lxc.uts.name = <%= @name %>
 lxc.arch = amd64
 lxc.autodev = 1
