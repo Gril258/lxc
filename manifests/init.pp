@@ -96,6 +96,13 @@ class lxc(
     require => Exec['apt-update-common-special']
   }
   case $::lsbdistcodename {
+    'buster': {
+      package { 'libvirt-clients':
+        ensure  => 'latest',
+        tag     => 'special',
+        require => Exec['apt-update-common-special']
+      }
+    }
     'stretch': {
       package { 'libvirt-clients':
         ensure  => 'latest',
