@@ -51,6 +51,9 @@ auto <%= @public_bridge %>:<%= ipalias['id'] %>
 iface <%= @public_bridge %>:<%= ipalias['id'] %> inet static
   address <%= ipalias['ip'] %>
   netmask <%= ipalias['netmask'] %>
+<% if ipalias.has_key?('masquerade') and ipalias.has_key?('cidr')-%>
+  post-up iptables -t nat -A POSTROUTING -s <%= ipalias['ip'] %>/<%= ipalias['cidr'] %> ! -d <%= ipalias['ip'] %>/<%= ipalias['cidr'] %> -o <%= @public_bridge %> -j MASQUERADE
+<% end -%>
 <% end -%>
 <% end -%>
 
