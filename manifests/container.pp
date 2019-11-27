@@ -20,6 +20,7 @@ define lxc::container (
     $config_version = 'simple',
     $root_password = 'simplelongpasswordforcontainerpleasechangethis',
     $purge_container_network = false,
+    $disable_ipv6 = true,
   ) {
 
   $private_ipaddr = split($private_ip,'/')
@@ -67,10 +68,18 @@ define lxc::container (
     before  => File["${lxcpath}/${name}/config"]
   }
 
-  if $purge_container_network == true {
+  if $purge_container_network == true and $template == 'debian' {
     file { "${lxcpath}/${name}/rootfs/etc/network/interfaces":
       ensure  => file,
       content => template('lxc/interfaces.erb'),
+      require => Exec["lxc-create-${name}"],
+    }
+  }
+
+  if $disable_ipv6 == true {
+    file { "${lxcpath}/${name}/rootfs/etc/sysctl.d/01-ipv6_disable":
+      ensure  => file,
+      content => 'net.ipv6.conf.all.disable_ipv6 = 1',
       require => Exec["lxc-create-${name}"],
     }
   }
