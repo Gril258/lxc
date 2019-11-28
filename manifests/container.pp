@@ -21,6 +21,7 @@ define lxc::container (
     $root_password = 'simplelongpasswordforcontainerpleasechangethis',
     $purge_container_network = false,
     $disable_ipv6 = true,
+    $hard_memory_limit = undef,
   ) {
 
   $private_ipaddr = split($private_ip,'/')
