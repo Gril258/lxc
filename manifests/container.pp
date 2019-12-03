@@ -78,7 +78,7 @@ define lxc::container (
   }
 
   if $disable_ipv6 == true {
-    file { "${lxcpath}/${name}/rootfs/etc/sysctl.d/01-ipv6_disable":
+    file { "${lxcpath}/${name}/rootfs/etc/sysctl.d/01-ipv6_disable.conf":
       ensure  => file,
       content => 'net.ipv6.conf.all.disable_ipv6 = 1',
       require => Exec["lxc-create-${name}"],
