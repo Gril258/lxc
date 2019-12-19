@@ -30,6 +30,7 @@ linux.kernel_modules: bridge,br_netfilter,ip_tables,ip6_tables,ip_vs,netlink_dia
 #lxc.aa_profile = unconfined
 lxc.cgroup.devices.allow = a
 lxc.mount.auto=proc:rw sys:rw
+lxc.cap.drop =
 security.nesting: "true"
 security.privileged: "true"
 <% end %>
