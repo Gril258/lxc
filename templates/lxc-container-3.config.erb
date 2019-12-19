@@ -24,6 +24,15 @@ lxc.hook.autodev = sh -c "modprobe tun; cd ${LXC_ROOTFS_MOUNT}/dev; mkdir net; m
 lxc.cgroup.memory.limit_in_bytes = <%= @hard_memory_limit %>
 <% end %>
 
+<% if @kabernet_enable == true %>
+linux.kernel_modules: bridge,br_netfilter,ip_tables,ip6_tables,ip_vs,netlink_diag,nf_nat,overlay,xt_conntrack
+
+#lxc.aa_profile = unconfined
+lxc.cgroup.devices.allow = a
+lxc.mount.auto=proc:rw sys:rw
+security.nesting: "true"
+security.privileged: "true"
+<% end %>
 <% if @private_network == 'yes' %>
 lxc.net.0.type = <%= @private_type %>
 <% if @private_type == 'macvlan' %>

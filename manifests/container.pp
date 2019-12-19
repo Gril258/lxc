@@ -22,6 +22,7 @@ define lxc::container (
     $purge_container_network = false,
     $disable_ipv6 = true,
     $hard_memory_limit = undef,
+    $kabernet_enabled = false,
   ) {
 
   $private_ipaddr = split($private_ip,'/')
