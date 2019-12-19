@@ -24,7 +24,7 @@ lxc.hook.autodev = sh -c "modprobe tun; cd ${LXC_ROOTFS_MOUNT}/dev; mkdir net; m
 lxc.cgroup.memory.limit_in_bytes = <%= @hard_memory_limit %>
 <% end %>
 
-<% if @kabernet_enable == true %>
+<% if @kabernet_enabled == true %>
 linux.kernel_modules: bridge,br_netfilter,ip_tables,ip6_tables,ip_vs,netlink_diag,nf_nat,overlay,xt_conntrack
 
 #lxc.aa_profile = unconfined
