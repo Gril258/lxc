@@ -23,6 +23,7 @@ define lxc::container (
     $disable_ipv6 = true,
     $hard_memory_limit = undef,
     $kabernet_enabled = false,
+    $download_distro = undef,
   ) {
 
   $private_ipaddr = split($private_ip,'/')
@@ -33,6 +34,18 @@ define lxc::container (
     'centos': {
       $release_option = '-R'
       $install_command = "chroot ${lxcpath}/${name}/rootfs yum install -y wget vim git iputils-ping ca-certificates epel-release ${packages};chroot ${lxcpath}/${name}/rootfs yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm; chroot ${lxcpath}/${name}/rootfs yum install -y puppet; echo \"${root_password}\"| chroot ${lxcpath}/${name}/rootfs passwd root --stdin;"
+    }
+    'download': {
+      $release_option = "-d ${download_distro} -a amd64 -r"
+      case $download_distro {
+        'centos': {
+          $install_command = "chroot ${lxcpath}/${name}/rootfs yum install -y wget vim git iputils-ping ca-certificates epel-release ${packages};chroot ${lxcpath}/${name}/rootfs yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm; chroot ${lxcpath}/${name}/rootfs yum install -y puppet; echo \"${root_password}\"| chroot ${lxcpath}/${name}/rootfs passwd root --stdin;"
+        }
+        default: {
+          $install_command = "chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes wget vim git iputils-ping ca-certificates puppet ${packages};"
+        }
+      }
+
     }
     default: {
       $install_command = "chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes wget vim git iputils-ping ca-certificates puppet ${packages};"
