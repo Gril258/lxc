@@ -28,7 +28,6 @@ define lxc::container (
 
   $private_ipaddr = split($private_ip,'/')
   $public_ipaddr = split($public_ip,'/')
-  $common_config_name = $config_include
 
   case $template {
     'centos': {
@@ -56,6 +55,7 @@ define lxc::container (
     }
   }
 
+  $common_config_name = $config_include
 
   case $release {
     'jessie': {
