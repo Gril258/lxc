@@ -28,15 +28,17 @@ define lxc::container (
 
   $private_ipaddr = split($private_ip,'/')
   $public_ipaddr = split($public_ip,'/')
-  $common_config_name = $template
+  $common_config_name = $config_include
 
   case $template {
     'centos': {
       $release_option = '-R'
+      $config_include = $template
       $install_command = "chroot ${lxcpath}/${name}/rootfs yum install -y wget vim git iputils-ping ca-certificates epel-release ${packages};chroot ${lxcpath}/${name}/rootfs yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm; chroot ${lxcpath}/${name}/rootfs yum install -y puppet; echo \"${root_password}\"| chroot ${lxcpath}/${name}/rootfs passwd root --stdin;"
     }
     'download': {
       $release_option = "-d ${download_distro} -a amd64 -r"
+      $config_include = $download_distro
       case $download_distro {
         'centos': {
           $install_command = "chroot ${lxcpath}/${name}/rootfs yum install -y wget vim git iputils-ping ca-certificates epel-release ${packages};chroot ${lxcpath}/${name}/rootfs yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm; chroot ${lxcpath}/${name}/rootfs yum install -y puppet; echo \"${root_password}\"| chroot ${lxcpath}/${name}/rootfs passwd root --stdin;"
@@ -48,6 +50,7 @@ define lxc::container (
 
     }
     default: {
+      $config_include = $template
       $install_command = "chroot ${lxcpath}/${name}/rootfs apt-get update ; chroot ${lxcpath}/${name}/rootfs apt-get install --assume-yes wget vim git iputils-ping ca-certificates puppet ${packages};"
       $release_option = '-r'
     }
