@@ -64,6 +64,9 @@ define lxc::container (
     'stretch': {
     $packages = 'dirmngr cron python'
     }
+    'buster': {
+    $packages = 'dirmngr cron python'
+    }
     default: {
     $packages = 'cron python'
     }
