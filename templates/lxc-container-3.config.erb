@@ -61,3 +61,13 @@ lxc.net.1.ipv4.address = <%= @public_ip %>
 lxc.net.1.ipv4.gateway = <%= @public_gw %>
 <% end %>
 <% end %>
+<% if @private_second_network == 'yes' %>
+lxc.net.2.type = <%= @private_second_type %>
+<% if @private_second_type == 'macvlan' %>
+lxc.net.2.macvlan.mode = bridge
+<% end %>
+lxc.net.2.flags = up
+lxc.net.2.link = <%= @private_second_link %>
+lxc.net.2.name = eth2
+lxc.net.2.ipv4.address = <%= @private_second_ip %>
+<% end %>

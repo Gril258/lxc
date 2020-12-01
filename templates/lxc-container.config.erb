@@ -34,6 +34,18 @@ lxc.network.ipv4 = <%= @private_ip %>
 lxc.network.ipv4.gateway = <%= @private_gw %>
   <% end %>
 <% end %>
+
+<% if @private_second_network == 'yes' %>
+lxc.network.type = <%= @private_second_type %>
+<% if @private_second_type == 'macvlan' %>
+lxc.network.macvlan.mode = bridge
+<% end %>
+lxc.network.flags = up
+lxc.network.link = <%= @private_second_link %>
+lxc.network.name = eth2
+lxc.network.ipv4 = <%= @private_second_ip %>
+<% end %>
+
 <% if @public_network == 'yes' %>
 lxc.network.type = <%= @public_type %>
 <% if @public_type == 'macvlan' %>
