@@ -11,10 +11,10 @@ auto <%= @public_interface %>
 iface <%= @public_interface %> inet manual
     slaves <% @public_slaves.each do |publicslave| -%><%=publicslave -%> <% end -%>
 
-    bond_mode <% @public_bond_mode %>
-    bond_miimon 100
-    bond_downdelay 200
-    bond_updelay 200
+    bond-mode <% @public_bond_mode %>
+    bond-miimon 100
+    bond-downdelay 200
+    bond-updelay 200
 <% end %>
 
 
@@ -64,10 +64,10 @@ auto <%= @private_interface %>
 iface <%= @private_interface %> inet manual
     slaves <% @private_slaves.each do |privateslave| -%><%=privateslave -%> <% end -%>
 
-    bond_mode <% @private_bond_mode %>
-    bond_miimon 100
-    bond_downdelay 200
-    bond_updelay 200
+    bond-mode <% @private_bond_mode %>
+    bond-miimon 100
+    bond-downdelay 200
+    bond-updelay 200
 <% end %>
 
 
