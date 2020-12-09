@@ -197,7 +197,7 @@ define lxc::container (
     concat::fragment { "conatiner-route-persistent-private-second-${name}":
       order   => "02_${name}",
       target  => '/etc/network/if-up.d/local-containers',
-      content => template('lxc/local-containers-private.erb'),
+      content => template('lxc/local-containers-second-private.erb'),
     }
     Internal_network::Route <| |> {
       device => "dev ${private_link}",
