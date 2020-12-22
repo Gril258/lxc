@@ -177,9 +177,9 @@ define lxc::container (
       target  => '/etc/network/if-up.d/local-containers',
       content => template('lxc/local-containers-private.erb'),
     }
-    Internal_network::Route <| |> {
-      device => "dev ${private_link}",
-    }
+    #Internal_network::Route <| |> {
+    #  device => "dev ${private_link}",
+    #}
   }
 
   if $private_second_network == 'yes' {
@@ -199,9 +199,9 @@ define lxc::container (
       target  => '/etc/network/if-up.d/local-containers',
       content => template('lxc/local-containers-second-private.erb'),
     }
-    Internal_network::Route <| |> {
-      device => "dev ${private_link}",
-    }
+    #Internal_network::Route <| |> {
+    #  device => "dev ${private_link}",
+    #}
   }
 
   if $public_network == 'yes' {
