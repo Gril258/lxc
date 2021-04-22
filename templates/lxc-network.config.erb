@@ -7,14 +7,30 @@ auto lo
 iface lo inet loopback
 
 <% if @public_bond == 'yes' %>
+<% if @public_bond_config_version == '2' %>
+<% @public_slaves.each do |publicslave| -%>
+auto <%=publicslave -%>
+
+<% end -%>
+
 auto <%= @public_interface %>
 iface <%= @public_interface %> inet manual
+    bond-mode <%= @public_bond_mode %>
+    bond-miimon <%= @public_bond_miimon %>
+    bond-downdelay <%= @public_bond_downdelay %>
+    bond-updelay <%= @public_bond_updelay %>
+    slaves none
+    up /usr/sbin/ifenslave <%= @public_interface %> <% @public_slaves.each do |publicslave| -%><%=publicslave -%> <% end -%>
+<% else %>
+auto <%= @public_interface %>
+iface <%= @public_interface %> inet manual
+    bond-mode <%= @public_bond_mode %>
+    bond-miimon <%= @public_bond_miimon %>
+    bond-downdelay <%= @public_bond_downdelay %>
+    bond-updelay <%= @public_bond_updelay %>
     slaves <% @public_slaves.each do |publicslave| -%><%=publicslave -%> <% end -%>
 
-    bond-mode <%= @public_bond_mode %>
-    bond-miimon 100
-    bond-downdelay 200
-    bond-updelay 200
+<% end %>
 <% end %>
 
 
