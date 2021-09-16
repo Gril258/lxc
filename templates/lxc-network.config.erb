@@ -121,7 +121,7 @@ iface <%= @private_bridge %>:<%= ipalias['id'] %> inet static
 <% end -%>
 
 <% @private_aditional_vlan.each do |itf| -%>
-<% if itf.has_key?('raw_device') and if itf.has_key?('vlanid') and if itf.has_key?('bridge_device') and if itf.has_key?('mvlan_device')-%>
+<% if itf.has_key?('raw_device') and itf.has_key?('vlanid') and itf.has_key?('bridge_device') and itf.has_key?('mvlan_device')-%>
 auto <%= itf['raw_device'] %>.<%= itf['vlanid'] %>
 iface <%= itf['raw_device'] %>.<%= itf['vlanid'] %> inet manual
     vlan-raw-device <%= itf['raw_device'] %>
