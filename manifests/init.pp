@@ -31,6 +31,7 @@ class lxc(
   $private_vlan = 'no',
   $private_bridge_alias = 'no',
   $private_alias = [],
+  $private_aditional_vlan = [],
   $install_only = false,
   $is_aws = false,
   $lxc_version = 'latest'

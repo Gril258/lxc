@@ -119,3 +119,27 @@ iface <%= @private_bridge %>:<%= ipalias['id'] %> inet static
   netmask <%= ipalias['netmask'] %>
 <% end -%>
 <% end -%>
+
+<% @private_aditional_vlan.each do |itf| -%>
+<% if itf.has_key?('raw_device') and if itf.has_key?('vlanid') and if itf.has_key?('bridge_device') and if itf.has_key?('mvlan_device')-%>
+auto <%= itf['raw_device'] %>.<%= itf['vlanid'] %>
+iface <%= itf['raw_device'] %>.<%= itf['vlanid'] %> inet manual
+    vlan-raw-device <%= itf['raw_device']
+
+auto <%= itf['bridge_device'] %>
+<% if itf.has_key?('ip') and itf.has_key?('id') and itf.has_key?('netmask')-%>
+  iface <%= itf['bridge_device'] %>inet static
+  address <%= itf['ip'] %>
+  netmask <%= itf['netmask'] %>
+<% else -%>
+  iface <%= itf['bridge_device'] %> inet manual
+<% end -%>
+  bridge_ports <%= itf['raw_device'] %>.<%= itf['vlanid'] %>
+  bridge_fd 0
+  bridge_stp <%= @private_stp %>
+  post-up /sbin/ip link add link <%= itf['bridge_device'] %> name <%= itf['mvlan_device'] %> type macvlan mode bridge
+  post-up /sbin/ifconfig <%= itf['mvlan_device'] %> up
+  post-up /etc/network/if-up.d/local-containers
+<% end -%>
+<% end -%>
+<% end -%>
