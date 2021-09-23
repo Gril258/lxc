@@ -22,13 +22,30 @@ iface <%= @public_interface %> inet manual
     slaves none
     up /usr/sbin/ifenslave <%= @public_interface %> <% @public_slaves.each do |publicslave| -%><%=publicslave -%> <% end -%>
 <% else %>
+<% @public_slaves.each do |publicslave| -%>
+auto <%=publicslave -%>
+iface <%=publicslave -%> inet manual
+    bond-mode <%= @public_bond_mode %>
+    bond-master <%= @public_interface %> 
+    bond-miimon <%= @public_bond_miimon %>
+    bond-downdelay <%= @public_bond_downdelay %>
+    bond-updelay <%= @public_bond_updelay %>
+<% if @public_bond_mode == '802.3ad' %>
+    bond-lacp-rate 1 <%= @public_bond_lacp_rate %>
+    bond-xmit-hash-policy <%= @public_bond_xmit_hash_policy %>
+<% end -%>
+<% end -%>
 auto <%= @public_interface %>
 iface <%= @public_interface %> inet manual
     bond-mode <%= @public_bond_mode %>
     bond-miimon <%= @public_bond_miimon %>
     bond-downdelay <%= @public_bond_downdelay %>
     bond-updelay <%= @public_bond_updelay %>
-    slaves <% @public_slaves.each do |publicslave| -%><%=publicslave -%> <% end -%>
+<% if @public_bond_mode == '802.3ad' %>
+    bond-lacp-rate 1 <%= @public_bond_lacp_rate %>
+    bond-xmit-hash-policy <%= @public_bond_xmit_hash_policy %>
+<% end -%>
+    bond-slaves none
 
 <% end %>
 <% end %>

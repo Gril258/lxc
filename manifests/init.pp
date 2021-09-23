@@ -18,6 +18,8 @@ class lxc(
   $public_bond_miimon = '100',
   $public_bond_updelay = '200',
   $public_bond_downdelay = '200',
+  $public_bond_lacp_rate = '1',
+  $public_bond_xmit_hash_policy = 'layer2+3',
   $private_stp = 'off',
   $private_bridge = undef,
   $private_macvlan = undef,
