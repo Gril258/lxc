@@ -23,8 +23,8 @@ iface <%= @public_interface %> inet manual
     up /usr/sbin/ifenslave <%= @public_interface %> <% @public_slaves.each do |publicslave| -%><%=publicslave -%> <% end -%>
 <% else %>
 <% @public_slaves.each do |publicslave| -%>
-auto <%=publicslave -%>
-iface <%=publicslave -%> inet manual
+auto <%=publicslave %>
+iface <%=publicslave %> inet manual
     bond-mode <%= @public_bond_mode %>
     bond-master <%= @public_interface %> 
     bond-miimon <%= @public_bond_miimon %>
