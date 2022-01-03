@@ -47,7 +47,7 @@ lxc.net.0.ipv4.address = <%= @private_ip %>
   <% if @public_network != 'yes' or @public_gw == nil %>
 lxc.net.0.ipv4.gateway = <%= @private_gw %>
   <% end %>
-  <% if @private_network != 'yes' and @private_hwaddr != nil %>
+  <% if @private_network == 'yes' and @private_hwaddr != nil %>
 lxc.net.0.hwaddr = <%= @private_hwaddr %>
   <% end %>
 <% end %>
@@ -59,7 +59,7 @@ lxc.net.1.macvlan.mode = bridge
 lxc.net.1.flags = up
 lxc.net.1.link = <%= @public_link %>
 lxc.net.1.name = eth0
-<% if @public_network != 'yes' and @public_hwaddr != nil %>
+<% if @public_network == 'yes' and @public_hwaddr != nil %>
 lxc.net.1.hwaddr = <%= @public_hwaddr %>
 <% end %>
 lxc.net.1.ipv4.address = <%= @public_ip %>
