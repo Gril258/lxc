@@ -31,7 +31,7 @@ iface <%=publicslave %> inet manual
     bond-downdelay <%= @public_bond_downdelay %>
     bond-updelay <%= @public_bond_updelay %>
 <% if @public_bond_mode == '802.3ad' %>
-    bond-lacp-rate 1 <%= @public_bond_lacp_rate %>
+    bond-lacp-rate <%= @public_bond_lacp_rate %>
     bond-xmit-hash-policy <%= @public_bond_xmit_hash_policy %>
 <% end -%>
 <% end -%>
@@ -42,7 +42,7 @@ iface <%= @public_interface %> inet manual
     bond-downdelay <%= @public_bond_downdelay %>
     bond-updelay <%= @public_bond_updelay %>
 <% if @public_bond_mode == '802.3ad' %>
-    bond-lacp-rate 1 <%= @public_bond_lacp_rate %>
+    bond-lacp-rate <%= @public_bond_lacp_rate %>
     bond-xmit-hash-policy <%= @public_bond_xmit_hash_policy %>
 <% end -%>
     bond-slaves none
